@@ -8,7 +8,7 @@ function Home() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    const { token, isLoggedIn, logout } = useAuth();
+    const { token, username, isLoggedIn, logout } = useAuth();
 
     const fetchBlogs = async () => {
         const data = await getBlogs();
@@ -40,12 +40,15 @@ function Home() {
                 {/* Header Section */}
                 <div className="flex justify-end mb-4">
                     {isLoggedIn ? (
+                        <div className = "flex items-center gap-4">
+                        <span className="text-gray-600 font-medium">Hi, {username} 👋</span>
                         <button
                             onClick={logout}
                             className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-4 py-2 rounded-lg transition-colors"
                         >
                             Logout
                         </button>
+                        </div>
                     ) : (
                         <div className="flex gap-3">
                             <Link to="/login" className="bg-white hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-lg border border-gray-300 transition-colors">
@@ -171,8 +174,8 @@ function Home() {
                     </div>
                 </div>
             </div>
-        </div>
-    );
+            </div>
+            );
 }
 
-export default Home;
+            export default Home;

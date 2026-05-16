@@ -15,7 +15,7 @@ function Login() {
     setError("");
     try {
       const data = await loginUser(username, password);
-      login(data.access_token);
+      login(data.access_token, username);
       navigate("/");
     } catch {
       setError("Invalid username or password");
