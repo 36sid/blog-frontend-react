@@ -1,3 +1,4 @@
+import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getBlogs, createBlog } from "../api/api";
@@ -6,6 +7,8 @@ function Home() {
     const [blogs, setBlogs] = useState([]);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+
+    const { token, isLoggedIn, logout } = useAuth();
 
     const fetchBlogs = async () => {
         const data = await getBlogs();
@@ -19,7 +22,7 @@ function Home() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        await createBlog({ title, content });
+        await createBlog({ title, content }, token);
 
         setTitle("");
         setContent("");
@@ -35,6 +38,25 @@ function Home() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
             <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 ">
                 {/* Header Section */}
+                <div className="flex justify-end mb-4">
+                    {isLoggedIn ? (
+                        <button
+                            onClick={logout}
+                            className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-4 py-2 rounded-lg transition-colors"
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <div className="flex gap-3">
+                            <Link to="/login" className="bg-white hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-lg border border-gray-300 transition-colors">
+                                Sign In
+                            </Link>
+                            <Link to="/register" className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-4 py-2 rounded-lg transition-colors">
+                                Register
+                            </Link>
+                        </div>
+                    )}
+                </div>
                 <div className="text-center mb-12">
                     <h1 className="text-3xl font-bold tracking-tight">
                         <span className="text-indigo-400"> {"</> Dev"}</span>Diary
@@ -46,6 +68,7 @@ function Home() {
 
                 <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 min-h-screen">
                     {/* Create Blog Section */}
+                    {isLoggedIn && (
                     <div className="xl:col-span-2 h-fit sticky top-8">
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 hover:shadow-2xl transition-all duration-300">
                             <div className="flex items-center mb-6">
@@ -90,6 +113,7 @@ function Home() {
                             </form>
                         </div>
                     </div>
+                    )}
 
                     {/* Blogs Section */}
                     <div className="xl:col-span-2">

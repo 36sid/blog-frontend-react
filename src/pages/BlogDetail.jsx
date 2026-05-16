@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getBlogs } from "../api/api";
+import { getBlogById } from "../api/api";
 
 function BlogDetail() {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
+
   useEffect(() => {
     const fetchBlog = async () => {
-      const data = await getBlogs();
-      const foundBlog = data.find(b => b.id == id);
-      setBlog(foundBlog);
-      setLoading(false);
+      try {
+        const blog = await getBlogById(id);
+        setBlog(blog);
+      } catch {
+        setBlog(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchBlog();
